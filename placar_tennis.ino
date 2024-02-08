@@ -5,7 +5,11 @@ const int CS = 5;
 const int CLK = 6;
 
 const int BotaoEsquerda = 10;
+const int BotaoDireita = 11;
+const int BotaoReset = 12;
+int buttonstateRESET;
 int buttonstateESQUERDA;
+int buttonstateDIREITA
 
 LedControl lc=LedControl(DIN, CLK, CS,4);
 
@@ -101,12 +105,28 @@ void imprimirGame(){
 
 void loop(){
   buttonstateESQUERDA = digitalRead(BotaoEsquerda);
+  buttonstateDIREITA = digitalRead(BotaoDireita);
+  buttonstateRESET = digitalRead(BotaoReset);
 
   if (buttonstateESQUERDA == HIGH){
     placarEsquerdo += 1;
     Serial.println(placarEsquerdo);
     while(digitalRead(BotaoEsquerda) == HIGH){}
   }
+
+  if (buttonstateDIREITA == HIGH){
+    placarEsquerdo += 1;
+    Serial.println(placarDireito);
+    while(digitalRead(BotaoDireita) == HIGH){}
+  }
+  
+  if (buttonstateRESET == HIGH){
+    placarEsquerdo = 0;
+    placarDireito = 0;
+    Serial.println("Resetado");
+    while(digitalRead(BotaoDireita) == HIGH){}
+  }
+
 
   switch (placarEsquerdo){
     case 0:
@@ -165,11 +185,16 @@ void loop(){
       imprimirGame();
       break;
     case 5:
-      zerarPlacar(3);
+      if(placarDireito == 5){
+        placarEsquerdo = 4;
+      }
+      zerarPlacar(0);
       lc.clearDisplay(2);
       lc.clearDisplay(1);
-      zerarPlacar(0);
+      //zerarPlacar(0);
       //placarEsquerdo = 0;
+      placarEsquerdo = 0;
+      placarDireito = 0;
       break;
     }
 } 
